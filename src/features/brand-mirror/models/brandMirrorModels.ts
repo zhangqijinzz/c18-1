@@ -23,7 +23,46 @@ export interface BrandDocument {
   versions: SavedVersion[]
 }
 
-export interface BrandMirrorSnapshot {
+/** 品牌库中的一个品牌：独立保存自己的令牌文档与版本历史 */
+export interface BrandRecord {
+  id: string
+  name: string
+  document: BrandDocument
+  createdAt: string
+  updatedAt: string
+}
+
+/** 回收站条目：删除后保留品牌数据，直到用户手动永久删除 */
+export interface TrashedBrand {
+  record: BrandRecord
+  trashedAt: string
+}
+
+export type PendingBrandAction =
+  | { kind: 'switch'; brandId: string; brandName: string; currentName: string }
+  | { kind: 'delete'; brandId: string; brandName: string; versionCount: number }
+  | { kind: 'purge'; brandId: string; brandName: string; versionCount: number }
+
+export interface BrandSummary {
+  id: string
+  name: string
+  primary: string
+  secondary: string
+  versionCount: number
+  updatedAt: string
+}
+
+export interface BrandLibrarySnapshot {
+  brands: BrandSummary[]
+  activeBrandId: string | null
+  activeBrandName: string | null
+  trashedBrands: TrashedBrand[]
+  pendingAction: PendingBrandAction | null
+  canUndoDelete: boolean
+  lastDeletedName: string | null
+}
+
+export interface BrandMirrorSnapshot extends BrandLibrarySnapshot {
   status: MirrorStatus
   tokens: BrandTokens
   theme: BrandTheme
