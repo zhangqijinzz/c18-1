@@ -25,12 +25,12 @@ export class BrandMirrorViewModel {
     return this.snapshot
   }
 
-  initialize(): void {
+  initialize(message?: string): void {
     const stored = this.repository.load()
     if (stored) {
-      this.snapshot = this.makeSnapshot(stored, '已恢复最近一次工作状态')
+      this.snapshot = this.makeSnapshot(stored, message ?? '已恢复最近一次工作状态')
     } else {
-      this.snapshot = this.makeSnapshot({ tokens: INITIAL_TOKENS, theme: 'studio', versions: [] }, '从 Studio warm 开始探索')
+      this.snapshot = this.makeSnapshot({ tokens: INITIAL_TOKENS, theme: 'studio', versions: [] }, message ?? '从 Studio warm 开始探索')
     }
     this.emit()
   }
